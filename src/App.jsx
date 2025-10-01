@@ -1,10 +1,9 @@
-import React from 'react'
-import Header from './components/Header'
-import Filter from './components/Filter'
-import Tabs from './components/Tabs'
-import TicketList from './components/TicketList'
-
-import LoadMoreTickets from './components/LoadMoreTickets'
+import React from "react";
+import Header from "./components/Header";
+import Filter from "./components/Filter";
+import Tabs from "./components/Tabs";
+import TicketList from "./components/TicketList";
+import LoadMoreTickets from "./components/LoadMoreTickets";
 
 function App() {
   return (
@@ -22,7 +21,7 @@ function App() {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const Header = () => {
   return (
@@ -9,7 +9,7 @@ const Header = () => {
         className="w-20 h-20 object-contain"
       />
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
