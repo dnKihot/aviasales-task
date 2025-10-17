@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   formatDuration,
   formatPrice,
@@ -57,3 +58,17 @@ const Ticket = ({ price, carrier, segments }) => {
 };
 
 export default Ticket;
+
+const segmentShape = PropTypes.shape({
+  origin: PropTypes.string.isRequired,
+  destination: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  duration: PropTypes.number.isRequired,
+  stops: PropTypes.arrayOf(PropTypes.string).isRequired,
+});
+
+Ticket.propTypes = {
+  price: PropTypes.number.isRequired,
+  carrier: PropTypes.string.isRequired,
+  segments: PropTypes.arrayOf(segmentShape).isRequired,
+};

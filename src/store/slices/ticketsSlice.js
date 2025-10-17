@@ -1,8 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import {
   fetchSearchId,
   fetchTickets as fetchTicketsBatch,
 } from "../../api/ticketsApi";
+
+const appendTickets = createAction("tickets/appendTickets");
+const setStopFlag = createAction("tickets/setStopFlag");
 
 const initialState = {
   tickets: [],
@@ -16,21 +19,21 @@ const MAX_RETRIES = 3;
 
 export const fetchTickets = createAsyncThunk(
   "tickets/fetchTickets",
-  async (_, { rejectWithValue }) => {
+  async (_, { dispatch, rejectWithValue }) => {
     try {
       const searchId = await fetchSearchId();
       let stop = false;
       let retriesLeft = MAX_RETRIES;
-      let ticketsAccumulator = [];
 
       while (!stop) {
         try {
           const { tickets, stop: batchStop } =
             await fetchTicketsBatch(searchId);
           if (Array.isArray(tickets) && tickets.length) {
-            ticketsAccumulator.push(...tickets);
+            dispatch(appendTickets(tickets));
           }
-          stop = batchStop;
+          stop = Boolean(batchStop);
+          dispatch(setStopFlag(stop));
           retriesLeft = MAX_RETRIES;
         } catch (error) {
           const isServerError =
@@ -45,7 +48,7 @@ export const fetchTickets = createAsyncThunk(
         }
       }
 
-      return { tickets: ticketsAccumulator, searchId };
+      return { searchId };
     } catch (error) {
       if (error instanceof Error) {
         return rejectWithValue(error.message);
@@ -59,10 +62,10 @@ const ticketsSlice = createSlice({
   name: "tickets",
   initialState,
   reducers: {
+    resetTickets: () => initialState,
     setTickets(state, action) {
       state.tickets = action.payload;
     },
-    resetTickets: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -70,19 +73,27 @@ const ticketsSlice = createSlice({
         state.status = "loading";
         state.error = null;
         state.stop = false;
+        state.tickets = [];
+      })
+      .addCase(appendTickets, (state, action) => {
+        state.tickets.push(...action.payload);
+      })
+      .addCase(setStopFlag, (state, action) => {
+        state.stop = action.payload;
       })
       .addCase(fetchTickets.fulfilled, (state, action) => {
         state.status = "success";
-        state.tickets = action.payload.tickets;
         state.searchId = action.payload.searchId;
         state.stop = true;
       })
       .addCase(fetchTickets.rejected, (state, action) => {
         state.status = "error";
         state.error = action.payload || "Не удалось загрузить билеты";
+        state.stop = false;
       });
   },
 });
 
 export const { resetTickets, setTickets } = ticketsSlice.actions;
 export default ticketsSlice.reducer;
+export { appendTickets, setStopFlag };

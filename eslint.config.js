@@ -45,6 +45,14 @@ export default [
       ],
       "react/react-in-jsx-scope": "off",
       "react/jsx-uses-react": "off",
+      "no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "^React$",
+          args: "after-used",
+          ignoreRestSiblings: true,
+        },
+      ],
     },
     settings: {
       react: {

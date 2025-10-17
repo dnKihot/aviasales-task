@@ -1,25 +1,33 @@
 const ALL_FILTER_ID = "all";
 
-const getAllowedTransferCounts = (activeFilters) => {
-  if (!Array.isArray(activeFilters) || activeFilters.length === 0) {
+const buildTransfersFilter = (activeFilters) => {
+  if (!Array.isArray(activeFilters)) {
     return null;
   }
 
-  const withoutAll = activeFilters.filter((id) => id !== ALL_FILTER_ID);
-
-  if (withoutAll.length === 0 || activeFilters.includes(ALL_FILTER_ID)) {
+  if (activeFilters.includes(ALL_FILTER_ID)) {
     return null;
   }
 
-  return new Set(withoutAll);
+  const transferIds = activeFilters.filter((id) => id !== ALL_FILTER_ID);
+
+  if (transferIds.length === 0) {
+    return new Set();
+  }
+
+  return new Set(transferIds);
 };
 
 export const filterTickets = (tickets, activeFilters) => {
   const source = Array.isArray(tickets) ? tickets : [];
-  const allowedTransfers = getAllowedTransferCounts(activeFilters);
+  const allowedTransfers = buildTransfersFilter(activeFilters);
 
-  if (!allowedTransfers) {
+  if (allowedTransfers === null) {
     return source;
+  }
+
+  if (allowedTransfers.size === 0) {
+    return [];
   }
 
   return source.filter((ticket) =>

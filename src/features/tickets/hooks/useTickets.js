@@ -4,6 +4,7 @@ import {
   selectAllTickets,
   selectTicketsError,
   selectTicketsStatus,
+  selectTicketsStopFlag,
 } from "../selectors";
 import { selectActiveFilters } from "../../filters/selectors";
 import { selectSortBy } from "../../sort/selectors";
@@ -13,6 +14,7 @@ const useTickets = () => {
   const tickets = useSelector(selectAllTickets);
   const status = useSelector(selectTicketsStatus);
   const error = useSelector(selectTicketsError);
+  const stop = useSelector(selectTicketsStopFlag);
   const activeFilters = useSelector(selectActiveFilters);
   const sortBy = useSelector(selectSortBy);
 
@@ -25,6 +27,7 @@ const useTickets = () => {
     tickets: visibleTickets,
     status,
     error,
+    isComplete: stop,
   };
 };
 
