@@ -2,80 +2,83 @@
 
 ![Aviasales UI](public/images/Logo.png)
 
-Учебный проект по поиску авиабилетов, выполненный на **React 19 + Redux Toolkit** с TailwindCSS. Приложение полностью повторяет логику тестового задания Aviasales: загрузка большого объёма билетов, фильтры по пересадкам, сортировка и постраничный показ.
+Elegant flight search crafted with **React 19**, **Redux Toolkit**, and **TailwindCSS**. The project focuses on high-throughput data handling, responsive UX, and a feature-oriented architecture that keeps business logic scalable and discoverable.
 
 ---
 
-## 🚀 Деплой
+## 🚀 Live Demo & Repository
 
-- Production: _добавь сюда ссылку после деплоя на Vercel_
-
----
-
-## 🧱 Основные фичи
-
-- ✅ Стриминговая загрузка порядка 10 000 билетов с API и ретраи 500 ошибок  
-- ✅ Фильтрация по количеству пересадок и сортировка (`Самый дешевый`, `Самый быстрый`, `Оптимальный`)  
-- ✅ Рендер итогового списка на лету с кнопкой «Показать ещё»  
-- ✅ Лоадеры для первоначальной и последующих догрузок + обработка ошибок  
-- ✅ Грамотные ключи для списка, валидный ESLint и чистая консоль
+- Production: https://aviasales-task-six.vercel.app/  
+- Source: https://github.com/dnKihot/aviasales-task
 
 ---
 
-## 🗂️ Структура
+## 🌟 Highlights
+
+- ⚡️ Streams ~10 000 tickets from the Aviasales API with graceful retry logic for 500 responses  
+- 🧭 Filters by exact stop count and sorts by price, duration, or optimal balance in real time  
+- 🧱 Feature-oriented architecture: each domain (tickets, filters, sort) exposes a clean public API of selectors, hooks, and utilities  
+- 🪄 Incremental rendering — the list is interactive before the entire dataset arrives, with skeleton loaders signalling progress  
+- 🔐 Production-safe keys, zero console noise, and linting enforced via ESLint + Prettier  
+- 🎨 Tailwind-driven UI mirroring the Aviasales experience while remaining fully responsive
+
+---
+
+## 🏗️ Architectural Notes
+
+The codebase embraces a **feature-oriented** layout inspired by Domain-Driven Design. Business modules (tickets, filters, sort) co-locate Redux slices, selectors, hooks, and utilities. Presentation components stay pure, consuming only the exposed public APIs. This separation delivers:
+
+- Predictable scaling — adding new ticket capabilities never leaks into unrelated modules  
+- Fast onboarding — directories map directly to product language, not framework primitives  
+- Safe reuse — feature boundaries make it trivial to lift modules into other products
 
 ```text
 src/
-├── api/                 # Взаимодействие с Aviasales API
-├── components/          # Презентационные компоненты UI
+├── api/                 # Aviasales HTTP clients
+├── components/          # Pure UI blocks
 ├── features/
-│   ├── filters/         # Селекторы фильтров
-│   ├── sort/            # Селекторы сортировки
-│   └── tickets/         # Хуки, селекторы, утилиты, форматтеры
-├── store/               # Redux Toolkit store + слайсы
-├── constants/           # Статические списки фильтров и табов
-└── utils/               # Вспомогательные функции
+│   ├── filters/         # Selectors & helpers for stop filters
+│   ├── sort/            # Sorting state selectors
+│   └── tickets/         # Data hooks, selectors, formatting, filtering
+├── store/               # Redux Toolkit store & slices
+├── constants/           # Filter/sort descriptors
+└── utils/               # Shared helpers
 ```
 
 ---
 
-## 🛠️ Стек
+## 🛠️ Tech Stack
 
-- React 19, React Redux, Redux Toolkit
-- Vite 7, TailwindCSS 3
-- ESLint + Prettier, PropTypes
+- React 19 • React Redux • Redux Toolkit  
+- Vite 7 • TailwindCSS 3  
+- ESLint • Prettier • PropTypes  
+- Deployed on Vercel
 
 ---
 
-## ▶️ Запуск
+## ▶️ Getting Started
 
 ```bash
-npm install
-npm run dev
+yarn
+yarn dev
 ```
 
 ---
 
-## 📋 Скрипты
+## 📋 Available Scripts
 
-- `npm run dev` — локальная разработка  
-- `npm run build` — production-сборка  
-- `npm run preview` — предпросмотр билда  
-- `npm run lint` — проверка ESLint
-
----
-
-## 🧪 Покрытие ТЗ
-
-- [x] Загрузка полного набора билетов и корректные ключи списка  
-- [x] Рабочие фильтры, сортировка и сообщение при пустой выдаче  
-- [x] Лоадеры для начальной и промежуточной загрузки  
-- [x] Чистый ESLint и отсутствие ошибок в консоли  
-- [ ] Деплой на Vercel (ссылка добавляется вручную)
+- `yarn dev` – start the Vite dev server  
+- `yarn build` – produce a production bundle  
+- `yarn preview` – preview the built bundle locally  
+- `yarn lint` – run ESLint with project rules
 
 ---
 
-## ✅ TODO
+## ✅ Feature Checklist
 
-- [ ] Задеплоить на Vercel и указать URL в README  
-- [ ] Добавить базовые unit-тесты (селекторы/утилиты)
+- [x] Full dataset ingestion with resilient batching and stable list keys  
+- [x] Stop-count filters, multi-mode sorting, empty-state messaging  
+- [x] Progressive loaders indicating initial and incremental fetches  
+- [x] Clean lint output, silent browser console  
+- [x] Ready-to-ship deployment on Vercel
+
