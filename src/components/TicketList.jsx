@@ -1,53 +1,71 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import useTickets from "../features/tickets/hooks/useTickets";
 import Ticket from "./Ticket";
+import LoadMoreTickets from "./LoadMoreTickets";
 
-const MOCK_TICKETS = [
-  {
-    id: 1,
-    price: "13 400 ₽",
-    carrier: "/public/images/S7 Logo.png",
-    segments: [
-      {
-        route: "MOW – HKT",
-        time: "10:45 – 08:00",
-        duration: "21ч 15м",
-        stops: ["HKG", "JNB"],
-      },
-      {
-        route: "HKT – MOW",
-        time: "11:20 – 09:45",
-        duration: "19ч 10м",
-        stops: ["HKG"],
-      },
-    ],
-  },
-  {
-    id: 2,
-    price: "10 200 ₽",
-    carrier: "/public/images/S7 Logo.png",
-    segments: [
-      {
-        route: "MOW – DXB",
-        time: "06:15 – 14:30",
-        duration: "8ч 15м",
-        stops: [],
-      },
-      {
-        route: "DXB – MOW",
-        time: "18:00 – 22:15",
-        duration: "4ч 15м",
-        stops: [],
-      },
-    ],
-  },
-];
+const INITIAL_VISIBLE_COUNT = 5;
+const LOAD_MORE_STEP = 5;
 
 const TicketList = () => {
+  const { tickets, status, error } = useTickets();
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+
+  const visibleTickets = useMemo(
+    () => tickets.slice(0, visibleCount),
+    [tickets, visibleCount],
+  );
+
+  useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+  }, [tickets]);
+
+  const hasMore = tickets.length > visibleCount;
+  const isLoading = status === "loading";
+  const isInitialLoading =
+    (status === "idle" || status === "loading") && tickets.length === 0;
+
+  const handleLoadMore = () => {
+    setVisibleCount((count) => count + LOAD_MORE_STEP);
+  };
+
+  if (status === "error") {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4">
+        {error || "Не удалось загрузить билеты. Попробуйте обновить страницу."}
+      </div>
+    );
+  }
+
+  if (isInitialLoading) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-6 text-center text-gray-500">
+        Загружаем билеты...
+      </div>
+    );
+  }
+
+  if (status === "success" && visibleTickets.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-6 text-center text-gray-500">
+        Билеты не найдены. Попробуйте изменить фильтры.
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
-      {MOCK_TICKETS.map((ticket) => (
-        <Ticket key={ticket.id} {...ticket} />
+      {visibleTickets.map((ticket, index) => (
+        <Ticket
+          key={`${ticket.carrier}-${ticket.price}-${index}`}
+          {...ticket}
+        />
       ))}
+
+      <LoadMoreTickets
+        hasMore={hasMore}
+        onClick={handleLoadMore}
+        isDisabled={isLoading}
+      />
     </div>
   );
 };

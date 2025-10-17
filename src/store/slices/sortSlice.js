@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { DEFAULT_SORT } from "../../constants/sort";
 
 const initialState = {
-  sortBy: DEFAULT_SORT, // например "cheapest"
+  sortBy: DEFAULT_SORT,
 };
 
 const sortSlice = createSlice({

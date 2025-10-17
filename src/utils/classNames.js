@@ -17,7 +17,7 @@ export const getFilterItemClasses = (isChecked) =>
 
 export const getButtonClasses = (isPrimary = true) =>
   clsx(
-    "w-full py-3 px-4 rounded-lg font-semibold text-sm uppercase transition-colors",
+    "w-full py-3 px-4 rounded-lg font-semibold text-sm uppercase transition-colors disabled:opacity-60 disabled:cursor-not-allowed",
     {
       "bg-blue-500 text-white hover:bg-blue-600": isPrimary,
       "bg-gray-200 text-gray-700 hover:bg-gray-300": !isPrimary,

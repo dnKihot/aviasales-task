@@ -2,14 +2,15 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FILTER_OPTIONS } from "../constants/filters";
 import { toggleFilter } from "../store/slices/filtersSlice";
+import { selectActiveFilters } from "../features/filters/selectors";
 
 const Filter = () => {
   const dispatch = useDispatch();
-  const activeFilters = useSelector((state) => state.filters.activeFilters);
+  const activeFilters = useSelector(selectActiveFilters);
 
   return (
-    <aside className="w-full lg:w-72 bg-white rounded-lg shadow-sm p-4 lg:sticky lg:top-4">
-      <h2 className="text-sm font-semibold uppercase text-gray-900 mb-4">
+    <div className="space-y-4 lg:sticky lg:top-4">
+      <h2 className="text-sm font-semibold uppercase text-gray-900">
         Количество пересадок
       </h2>
 
@@ -29,7 +30,7 @@ const Filter = () => {
           </label>
         ))}
       </div>
-    </aside>
+    </div>
   );
 };
 
